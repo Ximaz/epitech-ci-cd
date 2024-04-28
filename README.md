@@ -4,6 +4,9 @@ This repository contains the most essentials CI/CD GitHub actions for you to
 have the "cleanest" code in terms of Epitech, and making sure it respects both
 it's Coding Style and it doesn't leak, thanks to Valgrind.
 
+This project may remember you of the `B-DOP-200 chocolatine` project, because
+it's the exact same thing, except is has many more features.
+
 # Triggers
 
 The CI/CD will be triggered on push and when merging pull requests, on all
@@ -11,9 +14,9 @@ branches.
 
 # Setup
 
-### Repository's Variables
+## Repository's Variables
 
-##### ARTIFACTS
+### ARTIFACTS
 
 The `ARTIFACTS` variable contains all the files that Automated Tests (Marvin)
 will look for in order to evaluate your project. It is a **space-separated** list
@@ -23,7 +26,7 @@ of strings. An example could be :
 
 for the `MyTeams` project.
 
-##### MIRROR_URL (optionnal)
+### MIRROR_URL (optionnal)
 
 The `MIRROR_URL` variable contains the Epitech repository you want to push your
 code onto. For instance, let's keep the `MyTeams` example.
@@ -35,14 +38,14 @@ I would configure my `MIRROR_URL` with the value :
 Please, note that the `MIRROR_URL` format is the SSH format, because the code
 will be pushed using your `SSH_PRIVATE_KEY` secret.
 
-### Repository's Secrets
+## Repository's Secrets
 
-##### SSH_PRIVATE_KEY (if MIRROR_URL is specified)
+### SSH_PRIVATE_KEY (if MIRROR_URL is specified)
 
 The SSH Private Key will be used to push all the references (commits and
 branches) to the Epitech mirror repository.
 
-##### SSH_PRIVATE_KEY_PASSPHRASE (optionnal)
+### SSH_PRIVATE_KEY_PASSPHRASE (optionnal)
 
 If your `SSH_PRIVATE_KEY` was generated with a passphrase, you have to specify
 it inside this secret. Make sure no one can read what while you're typing this
@@ -50,14 +53,14 @@ passphrase to your repository's secrets.
 
 # Jobs
 
-### `basics` :
+## `basics` :
 
 This job makes sure you did not push any temporary file as defined by EPITECH :
 - `*.o`: Object files
 - `*.log`: Logs files
 - `*.so`: Shared Object files
 - `*.a`: Archive files
-- `*.gcno, *.gcda`: Coverage files
+- `*.gcno`, `*.gcda`: Coverage files
 
 But is also makes sure you did not push a `.env` file, which is really
 interesting for the `DOP` (DevOPs) modules.
@@ -72,9 +75,9 @@ rules are doing their jobs :
 - `<binary>`: Builds the specified binary (ex: `myteams_server`, `myteams_cli`)
 - `clean`: Removes all temporary files
 - `fclean`: Removes all the binaries and libraries built for Automated Tests
-- `re`: `fclean` + `all`
+- `re`: `fclean` and `all`
 
-### `run-tests` :
+## `run-tests` :
 
 ***Only executed if :***
 - the `basics` job passed without error
@@ -94,7 +97,7 @@ look for :
 - invalid read/writes (soon)
 - unconditionnal jumps (soon)
 
-### `mirror-commits` :
+## `mirror-commits` :
 
 ***Only executed if :***
 - the `run-tests` job passed without error
@@ -126,7 +129,7 @@ so you will be fine.
 
 # Restrictions
 
-### Timeouts
+## Timeouts
 
 All jobs which imply compilations process are limited to 1 minute before
 running out of time, in order to save you some GitHUb Action usage. You can
@@ -134,12 +137,14 @@ change this value according to your needs, but it applies to :
 - `basics`: `Makefile` relink checks
 - `run-tests`: Criterion unit tests checks (not including Valgrind checks)
 
-### Repository Mirroring Action
+## Repository Mirroring Action
 
 The original action that you would normaly use in order to mirror your commits,
 branches and opened pull requests is [`pixta-dev/repository-mirroring-action`](https://github.com/pixta-dev/repository-mirroring-action).
 The problem with this GitHub Action is that it doesn't support any kind of
-SSH private key passphrase. To workaround this issue, I added a fork of this
+SSH private key passphrase.
+
+To workaround this issue, I added a fork of this
 repository which implements this feature. For now, you would like to use it.
 A [pull request has been opened](https://github.com/pixta-dev/repository-mirroring-action/pull/32) to enhance their project and making them adding
 this feature natively, so that you wouldn't have need to use the local GitHub
