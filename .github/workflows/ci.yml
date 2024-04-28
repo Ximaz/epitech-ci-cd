@@ -134,7 +134,7 @@ jobs:
 
             -   name: "Analyze valgrind report"
                 run: |
-                    if [[ ! -f "${{ env.VALGRIND_REPORTS }}" ]]; exit 0
+                    [ ! -f "${{ env.VALGRIND_REPORTS }}" ] && exit 0
                     status=0
                     block=""
                     while IFS= read -r line; do
