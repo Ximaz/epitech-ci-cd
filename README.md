@@ -27,7 +27,7 @@ following command :
 
 ```bash
 cd <your_project_name>
-# This must be YOUR repository, not the Epitech repotisory.
+# This must be YOUR repository, not the Epitech repository.
 git remote set-url origin git@github.com:<USERNAME>/<REPOSITORY>
 ```
 
