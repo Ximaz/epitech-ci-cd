@@ -7,6 +7,10 @@ on:
 env:
     UNIT_TESTS: "./unit_tests"
     VALGRIND_REPORTS: "./valgrind-reports.log"
+    ARTIFACTS: "${{ vars.ARTIFACTS }}"
+    MIRROR_URL: "${{ vars.MIRROR_URL }}"
+    SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+    SSH_PRIVATE_KEY_PASSPHRASE: "${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}"
 
 jobs:
     check-basics:
@@ -16,8 +20,6 @@ jobs:
         steps:
             -   id: "basic-check"
                 continue-on-error: true
-                env:
-                    ARTIFACTS: "${{ vars.ARTIFACTS }}"
                 if: "${{ env.ARTIFACTS }}"
                 run: "echo \"continue=1\" >> $GITHUB_OUTPUT"
 
@@ -38,11 +40,11 @@ jobs:
                 run: "[[ $(find . -type f \\( -name '*.o' -o -name '*.log' -o -name '.env' -o -name '*.so' -o -name '*.a' -o -name '*.gcno' -o -name '*.gcda' \\)) == \"\" ]] && exit 0 || exit 1"
 
             -   name: "Checking for the artifacts before compilation"
-                run: "for a in ${{ vars.ARTIFACTS }} ; do [ ! -f \"${a}\" ]; done"
+                run: "for a in ${{ env.ARTIFACTS }} ; do [ ! -f \"${a}\" ]; done"
 
             -   name: "Checking make on it's own"
                 timeout-minutes: 1
-                run: "make && for a in ${{ vars.ARTIFACTS }}; do [ -f \"${a}\" ]; done"
+                run: "make && for a in ${{ env.ARTIFACTS }}; do [ -f \"${a}\" ]; done"
 
             -   name: "Checking for make relink on it's own"
                 timeout-minutes: 1
@@ -50,7 +52,7 @@ jobs:
 
             -   name: "Checking 'all' rule"
                 timeout-minutes: 1
-                run: "make all && for a in ${{ vars.ARTIFACTS }}; do [ -f \"${a}\" ]; done"
+                run: "make all && for a in ${{ env.ARTIFACTS }}; do [ -f \"${a}\" ]; done"
 
             -   name: "Checking for 'all' make relink"
                 timeout-minutes: 1
@@ -65,7 +67,7 @@ jobs:
                 run: |
                     make
                     make fclean
-                    for a in ${{ vars.ARTIFACTS }}; do [ ! -f "${a}" ]; done
+                    for a in ${{ env.ARTIFACTS }}; do [ ! -f "${a}" ]; done
                     if [[ $(find . -type d -name '.git' -prune -o \( -type f \( -name '*.o' -o -name '*.log' -o -name '.env' -o -name '*.so' -o -name '*.a' -o -name '*.gcno' -o -name '*.gcda' \) \) -print) == "" ]]; then
                         exit 0
                     else
@@ -76,17 +78,17 @@ jobs:
                 timeout-minutes: 1
                 run: |
                     make re
-                    for a in ${{ vars.ARTIFACTS }} ; do [ -f "${a}" ]; done
+                    for a in ${{ env.ARTIFACTS }} ; do [ -f "${a}" ]; done
 
             -   name: "Checking the artifacts rule"
                 timeout-minutes: 1
                 run: |
-                    for a in ${{ vars.ARTIFACTS }}; do make "${a}" && [ -f "${a}" ]; done
+                    for a in ${{ env.ARTIFACTS }}; do make "${a}" && [ -f "${a}" ]; done
 
             -   name: "Checking for the artifacts make relink"
                 timeout-minutes: 1
                 run: |
-                    for a in ${{ vars.ARTIFACTS }}; do
+                    for a in ${{ env.ARTIFACTS }}; do
                         if [[ $(make "${a}") == "" ]]; then exit 1; fi;
                     done
 
@@ -157,9 +159,6 @@ jobs:
         steps:
             -   id: "mirroring-check"
                 continue-on-error: true
-                env:
-                    MIRROR_URL: "${{ vars.MIRROR_URL }}"
-                    SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
                 if: "${{ env.MIRROR_URL && env.SSH_PRIVATE_KEY }}"
                 run: "echo \"continue=1\" >> $GITHUB_OUTPUT"
 
@@ -177,6 +176,6 @@ jobs:
             -   name: "Mirror commits"
                 uses: "./.github/workflows/repository-mirroring-action"
                 with:
-                    target_repo_url: "${{ vars.MIRROR_URL }}"
-                    ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
-                    ssh_private_key_passphrase: "${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}"
+                    target_repo_url: "${{ env.MIRROR_URL }}"
+                    ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+                    ssh_private_key_passphrase: "${{ env.SSH_PRIVATE_KEY_PASSPHRASE }}"
