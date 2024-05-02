@@ -58,6 +58,18 @@ I would configure my `MIRROR_URL` with the value :
 Please, note that the `MIRROR_URL` format is the SSH format, because the code
 will be pushed using your `SSH_PRIVATE_KEY` secret.
 
+### VALGRIND_SUPPRESSIONS (optionnal)
+
+If during the `run-tests` rule execution you need to explicitly avoid memory
+checks for a specific library or function, like the `_dl_open` calls for
+instance, you can specify `Valgrind Suppressions` (check `2.5. Suppressing errors` from [Valgrind's Documentation](https://valgrind.org/docs/manual/valgrind_manual.pdf)
+for more information about that.)
+
+Do not abuse that feature as, the more suppressions, the less efficient memory
+checks are. It's just meant for some functions of the standard library which
+are known to be leaks-prone. It's not meant toa void memory checks on your own
+bad memory management.
+
 ## Repository's Secrets
 
 ### SSH_PRIVATE_KEY (if MIRROR_URL is specified)
@@ -114,7 +126,8 @@ look for :
 - memory leaks (including inside `fork()` children),
 - unclosed file descriptor,
 - invalid read/writes,
-- conditionnal jumps or move depends on uninitialised value(s)
+- conditionnal jumps or move depends on uninitialised value(s),
+- the "still reachable" bytes
 
 ## `mirror-commits` :
 
