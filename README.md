@@ -67,7 +67,7 @@ for more information about that.)
 
 Do not abuse that feature as, the more suppressions, the less efficient memory
 checks are. It's just meant for some functions of the standard library which
-are known to be leaks-prone. It's not meant toa void memory checks on your own
+are known to be leaks-prone. It's not meant to avoid memory checks on your own
 bad memory management.
 
 ## Repository's Secrets
