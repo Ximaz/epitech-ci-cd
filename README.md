@@ -124,6 +124,12 @@ possible, then the valgrind tests will make sure that the code you wrote, both
 the tests and the actual implementations, are not leaking at all. Valgrind will
 look for :
 - memory leaks (including inside `fork()` children),
+- invalid `free()`, `delete` and `delete[]`,
+- invalid system call params (uninitialised bytes),
+- overlaping for memory operations (`memmove`, `memcpy`, ...),
+- `fishy` arguments (possibly negative values),
+- invalid arguments for `*alloc` functions (`*alloc(0)`),
+- invalid alignment value,
 - unclosed file descriptor,
 - invalid read/writes,
 - conditionnal jumps or move depends on uninitialised value(s),
