@@ -113,9 +113,9 @@ the tests and the actual implementations, are not leaking at all. Valgrind will
 look for :
 - unfree'd memory,
 - unclosed file descriptor,
-- bad memory management inside `fork()` children
-- invalid read/writes (soon)
-- unconditionnal jumps (soon)
+- bad memory management inside `fork()` children,
+- invalid read/writes,
+- conditionnal jumps or move depends on uninitialised value(s)
 
 ## `mirror-commits` :
 
