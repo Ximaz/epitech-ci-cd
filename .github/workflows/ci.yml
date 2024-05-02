@@ -130,7 +130,7 @@ jobs:
                 run: "[[ $(grep -E \"^tests_run:\" Makefile) == \"\" ]] && exit 0 || make tests_run"
 
             -   name: "Run valgrind"
-                run: "[ -f \"${{ env.UNIT_TESTS }}\" ] && valgrind -s --leak-check=full --track-origins=yes --read-var-info=yes --trace-children=yes --show-leak-kinds=all --read-inline-info=yes --errors-for-leak-kinds=all ${{ env.UNIT_TESTS }} 2>${{ env.VALGRIND_REPORTS }}"
+                run: "[ -f \"${{ env.UNIT_TESTS }}\" ] && valgrind -s --leak-check=full --track-origins=yes --read-var-info=yes --trace-children=yes --show-leak-kinds=all --read-inline-info=yes --errors-for-leak-kinds=all --track-fds=yes ${{ env.UNIT_TESTS }} 2>${{ env.VALGRIND_REPORTS }}"
 
             -   name: "Analyze valgrind report"
                 run: |
@@ -148,6 +148,10 @@ jobs:
                             fi
                         fi
                         if [[ $(echo "${line}" | grep '^==.*== .* bytes in .* blocks are definitely lost in loss record .* of .*$') ]]; then
+                            block="${line}"
+                        elif [[ $(echo "${line}" | grep '^==.*== Invalid .* of size .*$') ]]; then
+                            block="${line}"
+                        elif [[ $(echo "${line}" | grep '^==.*== Open file descriptor .*: .*$') ]]; then
                             block="${line}"
                         fi
                     done < ${{ env.VALGRIND_REPORTS }}
