@@ -153,6 +153,8 @@ jobs:
                             block="${line}"
                         elif [[ $(echo "${line}" | grep '^==.*== Open file descriptor .*: .*$') ]]; then
                             block="${line}"
+                        elif [[ $(echo "${line}" | grep '^==.*== LEAK SUMMARY:.*$') ]]; then
+                            block="${line}"
                         fi
                     done < ${{ env.VALGRIND_REPORTS }}
                     exit "${status}"

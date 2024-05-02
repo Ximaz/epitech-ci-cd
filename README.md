@@ -111,9 +111,8 @@ If you have write your unit tests correctly, and have the most coverage
 possible, then the valgrind tests will make sure that the code you wrote, both
 the tests and the actual implementations, are not leaking at all. Valgrind will
 look for :
-- unfree'd memory,
+- memory leaks (including inside `fork()` children),
 - unclosed file descriptor,
-- bad memory management inside `fork()` children,
 - invalid read/writes,
 - conditionnal jumps or move depends on uninitialised value(s)
 
