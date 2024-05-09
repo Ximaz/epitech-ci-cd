@@ -5,7 +5,7 @@ get_variable()
     local DEFAULT="${1}"
     local VARIABLE_NAME="${2}"
 
-    [[ "${DEFAULT}" == "" ]] && read DEFAULT -p "Specify the ${VARIABLE_NAME}: "
+    [[ "${DEFAULT}" == "" ]] && read -p "Specify the ${VARIABLE_NAME}: " DEFAULT
     echo "${DEFAULT}"
 }
 
