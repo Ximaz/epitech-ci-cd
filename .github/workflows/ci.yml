@@ -28,7 +28,7 @@ jobs:
         runs-on: "ubuntu-latest"
         if: "${{ needs.check-basics.outputs.continue == '1' }}"
         container:
-            image: "ghcr.io/epitech/coding-style-checker:latest"
+            image: "epitechcontent/epitest-docker:latest"
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v4.1.1"
@@ -94,6 +94,11 @@ jobs:
             -   name: "Clean up"
                 run: "make fclean"
 
+    coding-style:
+        runs-on: "ubuntu-latest"
+        container:
+            image: "ghcr.io/epitech/coding-style-checker:latest"
+        steps:
             -   name: "Check coding style"
                 run: "/usr/local/bin/check.sh $(pwd) $(pwd)"
 
@@ -115,6 +120,7 @@ jobs:
     run-tests:
         needs:
             -   "basics"
+            -   "coding-style"
         runs-on: "ubuntu-latest"
         container:
             image: "epitechcontent/epitest-docker:latest"
@@ -132,6 +138,7 @@ jobs:
                 uses: "Ximaz/valgrind-action@v1.2.0"
                 with:
                     binary_path: "./${{ env.UNIT_TESTS }}"
+                    valgrind_suppressions: "${{ env.VALGRIND_SUPPRESSIONS }}"
 
     check-mirror-commits:
         runs-on: "ubuntu-latest"

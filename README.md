@@ -16,23 +16,11 @@ branches.
 
 ## Clone this repository
 
-To setup the workflow, you first need to clone this repository. You can use
-
+To setup the workflow, you first need to clone this repository. You can copy
+that one-line bash script, it will setup everyting for you :
 ```bash
-git clone git@github.com:Ximaz/epitech-ci-cd <your_project_name>
+curl -sSL https://raw.githubusercontent.com/Ximaz/epitech-ci-cd/main/setup.bash | bash
 ```
-
-Then you will have to change the origin URL. To do so, you can type the
-following command :
-
-```bash
-cd <your_project_name>
-# This must be YOUR repository, not the Epitech repository.
-git remote set-url origin git@github.com:<USERNAME>/<REPOSITORY>
-```
-
-Finally, you can remove the `README.md` file because it's the documentation
-about this project, not your project's one.
 
 ## Repository's Variables
 
